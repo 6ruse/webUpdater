@@ -4,30 +4,17 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Menus,
-  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
-  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
-  dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins,
-  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
-  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
-  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray,
-  dxSkinOffice2013LightGray, dxSkinOffice2013White, dxSkinOffice2016Colorful,
-  dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
-  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
-  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
-  dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
-  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, StdCtrls, cxButtons, ComCtrls
-  ,ShellAPI
+  Dialogs, StdCtrls, ComCtrls
+  ,ShellAPI, System.Net.URLClient, System.Net.HttpClient,
+  System.Net.HttpClientComponent
   ;
 
 type
   TFrmMain = class(TForm)
     RichLog: TRichEdit;
-    btnClose: TcxButton;
-    btnUpdateWeb: TcxButton;
+    btnUpdateWeb: TButton;
+    btnClose: TButton;
+    NetHTTPClient1: TNetHTTPClient;
     procedure FormCreate(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure btnUpdateWebClick(Sender: TObject);
@@ -90,32 +77,29 @@ end;
 
 procedure TFrmMain.FormShow(Sender: TObject);
 begin
+  Application.ProcessMessages ;
   UpdateWeb();  //обновляемся автоматически
-
+  Application.ProcessMessages ;
 end;
 
 procedure TFrmMain.UpdateWeb;
-var
-  FileOnNet, LocalFileName, dfile, sfile: string;
-  result: boolean;
-  FileList: TStringList;
-  i: Integer;
-//  FileName : string ;
+  var
+    FileOnNet, LocalFileName, dfile, sfile: string;
+    result: boolean;
+    FileList: TStringList;
+    i: Integer;
 begin
-  // обновить программное обеспечение
   try
-    result := true;
-    btnUpdateWeb.Enabled := false ;
+    RichLog.Lines.Add('Обращение на сервер обновлений.');
+    Application.ProcessMessages ;
     FileOnNet := ReadParam('infoweb', 'loadurl', EmptyStr);
     LocalFileName := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + 'upload\upload.txt';
 
-    if FileExists(LocalFileName) then
-      DeleteFile(LocalFileName);
-
-    RichLog.Lines.Add('Обращение на сервер обновлений.');
-    if GetInetFile(FileOnNet, LocalFileName) = true then
+  if GetInetFile(FileOnNet, LocalFileName) = true then
     begin
+      Application.ProcessMessages ;
       RichLog.Lines.Add('Получаю информацию об обновлении.');
+      Application.ProcessMessages ;
       FileList := TStringList.Create;
       FileList.LoadFromFile(LocalFileName);
       for i := 0 to FileList.Count - 1 do
@@ -135,24 +119,33 @@ begin
         else
         begin
           dfile := FileList[i];
-  //        sfile := sfile + ExtractUrlFileName(FileList[i]);
-
           if FileExists(sfile + '~') then deleteFile(sfile + '~');
           if FileExists(sfile) then
             if not RenameFile(sfile, sfile + '~') then
+            begin
               RichLog.Lines.Add('Не удалось переименовать файл:' + sfile);
+              Application.ProcessMessages ;
+            end;
           result := GetInetFile(dfile, sfile + ExtractUrlFileName(FileList[i]));
+          if result then
+            RichLog.Lines.Add('Скачал и обновил файл: ' + ExtractUrlFileName(FileList[i]))
+          else RichLog.Lines.Add('Не удалось скачать или обновить файл : ' + ExtractUrlFileName(FileList[i])) ;
+          Application.ProcessMessages ;
         end;
       end;
     end
     else
+    begin
       RichLog.Lines.Add('Не удалось получить информацию об обновлении.');
+      Application.ProcessMessages ;
+    end;
 
     FileList.Free;
     if result then
       RichLog.Lines.Add('Обновление завершено успешно.')
     else
       RichLog.Lines.Add('Обновление завершено c ошибками.');
+    Application.ProcessMessages ;
   except on E:Exception do
 
   end;

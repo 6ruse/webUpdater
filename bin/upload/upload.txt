@@ -2,6 +2,7 @@
 https://update-food.kz/updatetort/upd/tort.exe
 https://update-food.kz/updatetort/upd/Closer.exe
 /update
+https://update-food.kz/updatetort/upd/update/REF_TYPE_MC_THINK.sql
 https://update-food.kz/updatetort/upd/update/ADD_RECIPES.sql
 https://update-food.kz/updatetort/upd/update/update_calculation.sql
 https://update-food.kz/updatetort/upd/update/zdrop_reciple_calculation.sql
@@ -20,5 +21,6 @@ https://update-food.kz/updatetort/upd/update/TBL_PICTURES_ID.sql
 https://update-food.kz/updatetort/upd/update/trigger_tbl_pictures_bi0.sql
 https://update-food.kz/updatetort/upd/update/trigger_view_orders_bi0.sql
 https://update-food.kz/updatetort/upd/update/trigger_view_orders_bu0.sql
+https://update-food.kz/updatetort/upd/update/view_orders_bu1.sql
 /report
 https://update-food.kz/updatetort/upd/update/клиенты.xlt

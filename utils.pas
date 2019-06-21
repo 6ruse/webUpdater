@@ -1,7 +1,9 @@
 unit utils;
 
 interface
-uses Classes, SysUtils, Forms, Windows, IniFiles, Variants, Graphics, Shlobj, Wininet;
+uses Classes, SysUtils, Forms, Windows, IniFiles, Variants, Graphics, Shlobj, Wininet
+  ,System.Net.URLClient, System.Net.HttpClient, System.Net.HttpClientComponent
+;
 
 function ReadParam(const Section: string; const Ident: string; Default: string = ''): string;
 function GetInetFile(const fileURL, FileName: string): boolean;
@@ -19,37 +21,24 @@ begin
 end;
 
 function GetInetFile(const fileURL, FileName: string): boolean;
-const
-  BufferSize = 1024;
 var
-  hSession, hURL: HInternet;
-  Buffer: array[1..BufferSize] of Byte;
-  BufferLen: DWORD;
-  f: file;
-  sAppName: string;
+  LResponse: IHTTPResponse;
+  LStream: TFileStream;
+  LHttpClient: THTTPClient;
 begin
   Result := False;
-  sAppName := ExtractFileName(Application.ExeName);
-  hSession := InternetOpen(PChar(sAppName),
-  INTERNET_OPEN_TYPE_PRECONFIG, nil, nil, 0);
+  LHttpClient := THTTPClient.Create;
   try
-    hURL := InternetOpenURL(hSession, PChar(fileURL), nil, 0, 0, 0);
+    LStream := TFileStream.Create(FileName, fmOpenReadWrite or fmCreate);
     try
-      AssignFile(f, FileName);
-      Rewrite(f,1);
-      repeat
-        InternetReadFile(hURL, @Buffer, SizeOf(Buffer), BufferLen);
-        BlockWrite(f, Buffer, BufferLen);
-      until
-        BufferLen = 0;
-      CloseFile(f);
-      Result := True;
+      LResponse := LHttpClient.Get(fileURL, LStream);
     finally
-      InternetCloseHandle(hURL);
+      LStream.Free;
     end;
   finally
-    InternetCloseHandle(hSession);
+    LHttpClient.Free;
   end;
+  Result := true ;
 end;
 
 function ExtractUrlFileName(const AUrl: string): string;
