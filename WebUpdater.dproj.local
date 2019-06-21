@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2019.04.04 20:54:45.733.pas,C:\Users\Novikov_BK\Documents\RAD Studio\Projects\Unit1.pas=D:\PROJECT\webUpdater\source\uMain.pas</Transaction>
+    <Transaction>2019.04.04 20:54:45.733.dfm,C:\Users\Novikov_BK\Documents\RAD Studio\Projects\Unit1.dfm=D:\PROJECT\webUpdater\source\uMain.dfm</Transaction>
+    <Transaction>2019.04.04 20:54:56.498.dproj,C:\Users\Novikov_BK\Documents\RAD Studio\Projects\Project1.dproj=D:\PROJECT\webUpdater\source\WebUpdater.dproj</Transaction>
+    <Transaction>2019.04.04 21:05:41.964.pas,D:\PROJECT\webUpdater\source\Unit1.pas=D:\PROJECT\webUpdater\source\utils.pas</Transaction>
+  </Transactions>
+</BorlandProject>
