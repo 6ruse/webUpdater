@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ComCtrls
   ,ShellAPI, System.Net.URLClient, System.Net.HttpClient,
-  System.Net.HttpClientComponent
+  System.Net.HttpClientComponent, Vcl.ExtCtrls
   ;
 
 type
@@ -15,11 +15,12 @@ type
     btnUpdateWeb: TButton;
     btnClose: TButton;
     NetHTTPClient1: TNetHTTPClient;
+    Timer1: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure btnUpdateWebClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormShow(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
   private
     { Private declarations }
     procedure UpdateWeb();
@@ -75,8 +76,9 @@ begin
   RichLog.Lines.Clear;
 end;
 
-procedure TFrmMain.FormShow(Sender: TObject);
+procedure TFrmMain.Timer1Timer(Sender: TObject);
 begin
+  Timer1.Enabled := false ;
   Application.ProcessMessages ;
   UpdateWeb();  //обновляемся автоматически
   Application.ProcessMessages ;

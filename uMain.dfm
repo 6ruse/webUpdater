@@ -15,7 +15,6 @@ object FrmMain: TFrmMain
   Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object RichLog: TRichEdit
@@ -64,5 +63,10 @@ object FrmMain: TFrmMain
     UserAgent = 'Embarcadero URI Client/1.0'
     Left = 336
     Top = 144
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    Left = 176
+    Top = 128
   end
 end
